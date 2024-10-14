@@ -13,12 +13,20 @@ const router = express.Router();
 app.use(router);
 app.use(passport.initialize());
 
+const signinFnSet = [
+  passport.authenticate("local", { session: false }),
+  signin
+] as const;
+
 // @note routes
 router.post("/signup", signup);
 router.post(
   "/signin",
-  passport.authenticate("local", { session: false }),
-  signin,
+  ...signinFnSet,
+);
+router.post(
+  "/",
+  ...signinFnSet,
 );
 
 ff.http("jwtPublication", app);
